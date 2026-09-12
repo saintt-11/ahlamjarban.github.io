@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahlam Jarban — WryaEyes</title>
+<meta name="description" content="Ahlam Jarban (WryaEyes) — artiste yéménite en exil. Pochoir, peinture, textile, sculpture, art numérique. Le regard comme dernier espace de liberté.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#121212;
+    --concrete:#c9c5bc;
+    --paper:#ede9e1;
+    --ochre:#b23a2e;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4', serif;
+    font-size:18px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Archivo Expanded', sans-serif;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    margin:0;
+  }
+  a{color:var(--ochre);}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+
+  /* eye motif, used sparingly */
+  .eye{
+    display:inline-block;
+    width:1em;height:0.55em;
+    position:relative;
+  }
+  .eye svg{width:100%;height:100%;display:block;}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    background:var(--paper);
+    border-bottom:2px solid var(--ink);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 32px;
+  }
+  nav .logo{font-family:'Archivo Expanded',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.08em;text-transform:uppercase;}
+  nav .links{display:flex;gap:24px;font-family:'Archivo Expanded',sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;}
+  nav .links a{color:var(--ink);text-decoration:none;border-bottom:2px solid transparent;padding-bottom:2px;}
+  nav .links a:hover{border-color:var(--ochre);color:var(--ochre);}
+
+  section{padding:140px 0 96px;position:relative;}
+  section#travaux, section#presse{padding-top:96px;}
+
+  /* HERO */
+  #hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-top:96px;
+    border-bottom:6px solid var(--ink);
+    position:relative;
+    overflow:hidden;
+  }
+  #hero .kicker{
+    font-family:'Archivo Expanded',sans-serif;
+    font-size:13px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--ochre);margin-bottom:20px;
+  }
+  #hero h1{
+    font-size:clamp(52px,9vw,132px);
+    line-height:0.92;
+    margin-left:-4px;
+  }
+  #hero h1 .line2{display:block;margin-left:6vw;color:var(--ochre);}
+  #hero .sub{
+    max-width:520px;
+    margin-top:32px;
+    font-size:20px;
+    padding-left:2px;
+    border-left:4px solid var(--ink);
+    padding-left:20px;
+  }
+  #hero .eye-big{
+    position:absolute;
+    right:6%;
+    bottom:8%;
+    width:min(30vw,340px);
+    opacity:0.9;
+  }
+  @media (max-width:800px){
+    #hero .eye-big{position:static;width:60vw;margin-top:48px;}
+  }
+
+  /* BIO */
+  #bio{background:var(--ink);color:var(--paper);border-bottom:6px solid var(--ink);}
+  #bio .grid{display:grid;grid-template-columns:1fr 1.4fr;gap:64px;align-items:start;}
+  #bio h2{color:var(--paper);font-size:clamp(32px,4vw,48px);margin-bottom:24px;}
+  #bio .facts{list-style:none;margin:0;padding:0;font-family:'Archivo Expanded',sans-serif;font-size:13px;letter-spacing:0.04em;}
+  #bio .facts li{padding:12px 0;border-top:1px solid rgba(237,233,225,0.25);display:flex;justify-content:space-between;gap:16px;}
+  #bio .facts li:last-child{border-bottom:1px solid rgba(237,233,225,0.25);}
+  #bio .facts span:first-child{color:var(--concrete);text-transform:uppercase;}
+  #bio p{font-size:19px;max-width:640px;}
+  #bio p + p{margin-top:20px;}
+  @media (max-width:850px){#bio .grid{grid-template-columns:1fr;}}
+
+  /* TRAVAUX — asymmetric wall grid */
+  #travaux h2{font-size:clamp(32px,4vw,48px);margin-bottom:8px;}
+  #travaux .lead{max-width:560px;color:#4a4a4a;margin-bottom:56px;}
+  .wall-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:24px;
+  }
+  .wall{
+    border:3px solid var(--ink);
+    background:var(--concrete);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    min-height:260px;
+    padding:20px;
+  }
+  .wall.ph{
+    background:repeating-linear-gradient(135deg, var(--concrete), var(--concrete) 14px, #b8b3a7 14px, #b8b3a7 16px);
+  }
+  .wall .tag{
+    position:absolute;top:16px;left:16px;
+    font-family:'Archivo Expanded',sans-serif;
+    font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    background:var(--paper);border:2px solid var(--ink);
+    padding:3px 8px;
+  }
+  .wall h3{font-size:20px;background:var(--paper);display:inline-block;padding:6px 10px;border:2px solid var(--ink);}
+  .wall .meta{font-family:'Archivo Expanded',sans-serif;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);margin-top:8px;background:var(--paper);display:inline-block;padding:4px 8px;border:2px solid var(--ink);}
+  .w1{grid-column:span 7;min-height:420px;}
+  .w2{grid-column:span 5;min-height:420px;}
+  .w3{grid-column:span 4;}
+  .w4{grid-column:span 4;}
+  .w5{grid-column:span 4;}
+  .w6{grid-column:span 6;}
+  .w7{grid-column:span 6;}
+  @media (max-width:900px){
+    .wall-grid{grid-template-columns:1fr;}
+    .w1,.w2,.w3,.w4,.w5,.w6,.w7{grid-column:span 1;}
+  }
+
+  /* DEMARCHE */
+  #demarche{
+    background:var(--ochre);
+    color:var(--paper);
+    border-top:6px solid var(--ink);
+    border-bottom:6px solid var(--ink);
+    text-align:left;
+  }
+  #demarche blockquote{
+    margin:0;
+    font-family:'Archivo Expanded',sans-serif;
+    font-size:clamp(28px,4.2vw,52px);
+    line-height:1.15;
+    font-weight:800;
+    text-transform:uppercase;
+    max-width:900px;
+  }
+  #demarche cite{
+    display:block;
+    margin-top:28px;
+    font-style:normal;
+    font-family:'Source Serif 4',serif;
+    font-size:16px;
+    letter-spacing:0.02em;
+  }
+
+  /* PRESSE */
+  #presse h2{font-size:clamp(32px,4vw,48px);margin-bottom:40px;}
+  .timeline{border-top:2px solid var(--ink);}
+  .tl-item{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:24px;
+    padding:22px 0;
+    border-bottom:2px solid var(--ink);
+  }
+  .tl-item .year{font-family:'Archivo Expanded',sans-serif;font-weight:800;font-size:22px;color:var(--ochre);}
+  .tl-item h3{font-size:18px;text-transform:none;font-weight:600;letter-spacing:0;font-family:'Source Serif 4',serif;}
+  .tl-item .place{font-family:'Archivo Expanded',sans-serif;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:#5a5a5a;margin-top:6px;}
+  @media (max-width:600px){.tl-item{grid-template-columns:1fr;}}
+
+  /* CONTACT */
+  #contact{
+    background:var(--ink);
+    color:var(--paper);
+    text-align:left;
+    border-top:6px solid var(--ink);
+  }
+  #contact h2{color:var(--paper);font-size:clamp(36px,6vw,72px);margin-bottom:32px;}
+  #contact .row{display:flex;flex-wrap:wrap;gap:40px;align-items:baseline;font-family:'Archivo Expanded',sans-serif;}
+  #contact a{color:var(--paper);text-decoration:none;font-size:clamp(20px,2.6vw,30px);border-bottom:3px solid var(--ochre);padding-bottom:4px;}
+  #contact a:hover{color:var(--ochre);border-color:var(--paper);}
+  #contact .foot{margin-top:80px;font-family:'Archivo Expanded',sans-serif;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:var(--concrete);}
+
+  ::selection{background:var(--ochre);color:var(--paper);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Ahlam Jarban</div>
+  <div class="links">
+    <a href="#bio">Bio</a>
+    <a href="#travaux">Travaux</a>
+    <a href="#demarche">Démarche</a>
+    <a href="#presse">Presse</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="wrap">
+    <div class="kicker">Artiste plasticienne — WryaEyes</div>
+    <h1>Le regard<span class="line2">reste libre.</span></h1>
+    <p class="sub">Ahlam Jarban, dite WryaEyes. Première graffeuse du Yémen, aujourd'hui artiste en exil à Paris. Pochoir, peinture, textile, sculpture, art numérique — un seul motif au centre : les yeux.</p>
+  </div>
+  <div class="eye-big">
+    <svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 55 C 40 5, 160 5, 198 55 C 160 105, 40 105, 2 55 Z" fill="none" stroke="#121212" stroke-width="4"/>
+      <circle cx="100" cy="55" r="30" fill="none" stroke="#121212" stroke-width="4"/>
+      <circle cx="100" cy="55" r="10" fill="#b23a2e"/>
+    </svg>
+  </div>
+</section>
+
+<section id="bio">
+  <div class="wrap grid">
+    <ul class="facts">
+      <li><span>Née</span><span>08.09.1992 — Sanaa, Yémen</span></li>
+      <li><span>Origines</span><span>Somalienne &amp; éthiopienne</span></li>
+      <li><span>Formation initiale</span><span>Géologie pétrolière, Univ. de Sanaa</span></li>
+      <li><span>Graffiti</span><span>Depuis 2010, première femme graffeuse du Yémen</span></li>
+      <li><span>Exil</span><span>Yémen → Jordanie → France (2018)</span></li>
+      <li><span>Actuellement</span><span>Atelier des Artistes en Exil, Paris · ENSBA depuis 2019</span></li>
+    </ul>
+    <div>
+      <h2>Le corps efface,<br>le regard résiste.</h2>
+      <p>Ahlam Jarban commence le graffiti à Sanaa en 2010, en pleine clandestinité — première femme à peindre dans la rue au Yémen, en crew, alors que le pays bascule dans la guerre en 2015. Diplômée en géologie pétrolière, elle abandonne cette voie pour l'art, seul espace où elle peut encore dire quelque chose.</p>
+      <p>Elle fuit le pays en 2016 avec sa mère et sa grand-mère, transite par la Jordanie, puis arrive seule en France en 2018. Depuis, elle est membre de l'Atelier des Artistes en Exil à Paris et étudie à l'ENSBA.</p>
+      <p>Son travail — pochoir, peinture, textile, sculpture, art numérique — revient sans cesse aux yeux : le seul espace du corps féminin resté visible sous le niqab, un motif qu'elle a retrouvé dans le masque sanitaire porté en Europe. Un discours féministe, qui critique autant les sociétés islamiques extrémistes et les régimes autoritaires que le racisme, y compris à l'intérieur de sa propre communauté.</p>
+    </div>
+  </div>
+</section>
+
+<section id="travaux">
+  <div class="wrap">
+    <h2>Travaux sélectionnés</h2>
+    <p class="lead">Une sélection de séries et pièces, du pochoir dans la rue aux installations en galerie. Chaque mur, une œuvre.</p>
+    <div class="wall-grid">
+      <div class="wall ph w1">
+        <span class="tag">Série</span>
+        <h3>Haram Eyes</h3>
+        <span class="meta">2020 — Pavillon Carré de Baudouin, avec Art Azoï</span>
+      </div>
+      <div class="wall ph w2">
+        <span class="tag">Exposition collective</span>
+        <h3>Visions d'exil</h3>
+        <span class="meta">2019 – 2020</span>
+      </div>
+      <div class="wall ph w3">
+        <span class="tag">Série</span>
+        <h3>Remasks</h3>
+        <span class="meta">2021 — Ivry-sur-Seine</span>
+      </div>
+      <div class="wall ph w4">
+        <span class="tag">Collaboration</span>
+        <h3>Fresque UNHCR</h3>
+        <span class="meta">2021 — Mairie de Bayeux</span>
+      </div>
+      <div class="wall ph w5">
+        <span class="tag">Exposition collective</span>
+        <h3>Regards sur la Mixité</h3>
+        <span class="meta">2022 — Val-de-Reuil</span>
+      </div>
+      <div class="wall ph w6">
+        <span class="tag">Collection</span>
+        <h3>Gaza</h3>
+        <span class="meta">Imago Mundi Collection</span>
+      </div>
+      <div class="wall ph w7">
+        <span class="tag">Exposition personnelle</span>
+        <h3>Je passe (l'intégrale)</h3>
+        <span class="meta">2022 — Équinoxe, Châteauroux</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demarche">
+  <div class="wrap">
+    <blockquote>
+      « Les yeux sont le seul endroit du corps qu'on ne pouvait pas nous enlever.
+      Je peins ce qui reste. »
+      <cite>— Ahlam Jarban, WryaEyes</cite>
+    </blockquote>
+  </div>
+</section>
+
+<section id="presse">
+  <div class="wrap">
+    <h2>Presse &amp; expositions</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="year">2022</div>
+        <div>
+          <h3>Je passe (l'intégrale) — exposition personnelle</h3>
+          <div class="place">Équinoxe, Châteauroux</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="year">2022</div>
+        <div>
+          <h3>Regards sur la Mixité — exposition collective</h3>
+          <div class="place">Val-de-Reuil</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="year">2021</div>
+        <div>
+          <h3>Remasks — série exposée</h3>
+          <div class="place">Ivry-sur-Seine</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="year">2021</div>
+        <div>
+          <h3>Fresque collaborative UNHCR</h3>
+          <div class="place">Mairie de Bayeux</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="year">2020</div>
+        <div>
+          <h3>Haram Eyes, avec Art Azoï</h3>
+          <div class="place">Pavillon Carré de Baudouin, Paris</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="year">2019 – 2020</div>
+        <div>
+          <h3>Visions d'exil — exposition collective</h3>
+          <div class="place">Paris</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <h2>Parlons-en.</h2>
+    <div class="row">
+      <a href="mailto:ahlam.jarban@gmail.com">ahlam.jarban@gmail.com</a>
+      <a href="https://instagram.com/wryaeyes" target="_blank" rel="noopener">@wryaeyes</a>
+    </div>
+    <div class="foot">Ahlam Jarban — WryaEyes · Atelier des Artistes en Exil, Paris</div>
+  </div>
+</section>
+
+</body>
+</html>
