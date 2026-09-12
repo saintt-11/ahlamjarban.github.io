@@ -156,6 +156,32 @@
     .w1,.w2,.w3,.w4,.w5,.w6,.w7{grid-column:span 1;}
   }
 
+  /* GALERIE */
+  #galerie{background:var(--paper);border-top:6px solid var(--ink);}
+  #galerie h2{font-size:clamp(32px,4vw,48px);margin-bottom:8px;}
+  #galerie .lead{max-width:560px;color:#4a4a4a;margin-bottom:56px;}
+  .gal-grid{
+    columns:4 260px;
+    column-gap:24px;
+  }
+  .gal-item{
+    break-inside:avoid;
+    margin-bottom:24px;
+    border:3px solid var(--ink);
+    background:var(--ink);
+    position:relative;
+  }
+  .gal-item img{width:100%;display:block;}
+  .gal-cap{
+    font-family:'Archivo Expanded',sans-serif;
+    font-size:11px;letter-spacing:0.04em;
+    color:var(--paper);
+    padding:10px 12px;
+  }
+  @media (max-width:640px){
+    .gal-grid{columns:1;}
+  }
+
   /* DEMARCHE */
   #demarche{
     background:var(--ochre);
@@ -220,6 +246,7 @@
   <div class="links">
     <a href="#bio">Bio</a>
     <a href="#travaux">Travaux</a>
+    <a href="#galerie">Galerie</a>
     <a href="#demarche">Démarche</a>
     <a href="#presse">Presse</a>
     <a href="#contact">Contact</a>
@@ -299,6 +326,71 @@
         <span class="tag">Exposition personnelle</span>
         <h3>Je passe (l'intégrale)</h3>
         <span class="meta">2022 — Équinoxe, Châteauroux</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="galerie">
+  <div class="wrap">
+    <h2>Galerie</h2>
+    <p class="lead">Photos de terrain et d'atelier — murs, gros plans, sculptures en cours.</p>
+    <div class="gal-grid">
+      <div class="gal-item">
+        <img src="images/galerie-01-mur-rue.jpg" alt="Mur peint dans une rue de Paris, motif répété et yeux peints, avec la mention Covid-19">
+        <div class="gal-cap">Intervention murale — Paris</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-02-en-cours.jpg" alt="Ahlam Jarban peignant sur une échelle, en train de réaliser des yeux sur le mur">
+        <div class="gal-cap">En cours de réalisation</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-03-detail-yeux.jpg" alt="Détail peint de deux yeux sur fond de calligraphie et texte Covid-19">
+        <div class="gal-cap">Détail — deux yeux</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-04-detail-oeil.jpg" alt="Détail peint d'un œil aux tons roses et violets">
+        <div class="gal-cap">Détail — œil</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-05-mur-couleur.jpg" alt="Mur peint en dégradé de couleurs avec des yeux, une passante portant un masque sanitaire">
+        <div class="gal-cap">Intervention murale — suite</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-06-gaza.jpg" alt="Graffiti du mot GAZA en bleu, Ahlam Jarban posant devant avec des bombes de peinture">
+        <div class="gal-cap">Gaza — graffiti</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-07-niche.jpg" alt="Œil peint dans une niche murale, graffiti coloré bleu et vert">
+        <div class="gal-cap">Œil en niche murale</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-08-oeil-peinture.jpg" alt="Peinture d'un œil rose et vert sur fond de calligraphie">
+        <div class="gal-cap">Peinture — œil</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-09-collage-haram.jpg" alt="Collage numérique vert, deux silhouettes, motif du mot haram répété en arrière-plan">
+        <div class="gal-cap">Collage numérique</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-10-collage-textile.jpg" alt="Collage rouge, motif d'yeux cousus et de bouches répété en quatre quadrants">
+        <div class="gal-cap">Collage textile</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-11-numerique.jpg" alt="Composition numérique abstraite en vert et bleu">
+        <div class="gal-cap">Composition numérique</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-12-sculpture-cuivre.jpg" alt="Sculpture métallique en forme d'œil, cuivre et laiton, tenue en main dans un atelier">
+        <div class="gal-cap">Sculpture — cuivre &amp; laiton</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-13-sculpture-metal.jpg" alt="Sculpture métallique en forme d'œil, tons rouges et argentés">
+        <div class="gal-cap">Sculpture — métal peint</div>
+      </div>
+      <div class="gal-item">
+        <img src="images/galerie-14-sculpture-acier.jpg" alt="Sculpture en acier en forme d'œil, en cours de fabrication dans un atelier">
+        <div class="gal-cap">Sculpture en acier — atelier</div>
       </div>
     </div>
   </div>
