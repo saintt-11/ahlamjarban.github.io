@@ -37,6 +37,11 @@
   img{max-width:100%;display:block;}
   .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
 
+  ::selection{background:var(--ochre);color:var(--paper);}
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--paper);}
+  ::-webkit-scrollbar-thumb{background:var(--ink);border:2px solid var(--paper);}
+
   /* eye motif, used sparingly */
   .eye{
     display:inline-block;
@@ -45,21 +50,121 @@
   }
   .eye svg{width:100%;height:100%;display:block;}
 
-  /* NAV */
+  /* ============ INTRO — iris reveal ============ */
+  #intro{
+    position:fixed;inset:0;z-index:300;
+    background:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;
+    will-change:opacity;
+  }
+  #intro-eye{
+    width:min(50vw,50vh,480px);
+    transform:scale(1);
+    will-change:transform;
+  }
+  #intro-eye svg{width:100%;height:auto;display:block;}
+  #intro .hint{
+    position:absolute;
+    bottom:48px;left:0;right:0;
+    text-align:center;
+    font-family:'Archivo Expanded',sans-serif;
+    font-size:12px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--paper);
+    opacity:0.75;
+  }
+  #intro .hint .arrow{
+    display:block;margin:10px auto 0;width:16px;height:16px;
+    border-right:2px solid var(--paper);border-bottom:2px solid var(--paper);
+    transform:rotate(45deg);
+    animation:bounce 1.6s ease-in-out infinite;
+  }
+  @keyframes bounce{
+    0%,100%{transform:rotate(45deg) translate(0,0);}
+    50%{transform:rotate(45deg) translate(6px,6px);}
+  }
+  #intro .skip{
+    position:absolute;top:24px;right:28px;
+    background:none;border:1px solid rgba(237,233,225,0.4);
+    color:var(--paper);
+    font-family:'Archivo Expanded',sans-serif;
+    font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+    padding:8px 14px;cursor:pointer;
+  }
+  #intro .skip:hover{border-color:var(--paper);color:var(--ochre);}
+  #intro.is-done{
+    opacity:0;pointer-events:none;
+    transition:opacity 0.4s ease;
+  }
+  body.intro-off #intro{display:none;}
+
+  /* nav starts hidden, fades in once intro clears */
   nav{
     position:fixed;top:0;left:0;right:0;z-index:50;
     background:var(--paper);
     border-bottom:2px solid var(--ink);
     display:flex;align-items:center;justify-content:space-between;
     padding:16px 32px;
+    opacity:0;transform:translateY(-8px);
+    transition:opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
   }
+  body.is-revealed nav{opacity:1;transform:translateY(0);}
+  nav.is-scrolled{box-shadow:0 4px 0 0 rgba(18,18,18,0.06);}
   nav .logo{font-family:'Archivo Expanded',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.08em;text-transform:uppercase;}
   nav .links{display:flex;gap:24px;font-family:'Archivo Expanded',sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;}
-  nav .links a{color:var(--ink);text-decoration:none;border-bottom:2px solid transparent;padding-bottom:2px;}
-  nav .links a:hover{border-color:var(--ochre);color:var(--ochre);}
+  nav .links a{color:var(--ink);text-decoration:none;border-bottom:2px solid transparent;padding-bottom:2px;transition:border-color 0.2s,color 0.2s;white-space:nowrap;}
+  nav .links a:hover,nav .links a.is-active{border-color:var(--ochre);color:var(--ochre);}
+  @media (max-width:760px){
+    nav{padding:14px 18px;flex-wrap:wrap;row-gap:10px;}
+    nav .links{gap:12px 16px;flex-wrap:wrap;font-size:11px;}
+  }
 
   section{padding:140px 0 96px;position:relative;}
   section#travaux, section#presse{padding-top:96px;}
+
+  /* ============ reveal-on-scroll utility ============ */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);
+    transition-delay:calc(var(--i,0) * 80ms);
+  }
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+
+  /* ============ MARQUEE ============ */
+  .marquee{
+    background:var(--ink);
+    border-bottom:6px solid var(--ink);
+    overflow:hidden;
+    padding:18px 0;
+  }
+  .marquee__track{
+    display:flex;
+    width:max-content;
+    animation:marquee 26s linear infinite;
+  }
+  .marquee:hover .marquee__track{animation-play-state:paused;}
+  .marquee__track span{
+    font-family:'Archivo Expanded',sans-serif;
+    font-weight:800;
+    font-size:clamp(18px,2.6vw,30px);
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    color:var(--paper);
+    white-space:nowrap;
+    padding:0 20px;
+  }
+  .marquee__track span.dot{color:var(--ochre);}
+  @keyframes marquee{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .marquee__track{animation:none;}
+  }
 
   /* HERO */
   #hero{
@@ -91,12 +196,32 @@
     border-left:4px solid var(--ink);
     padding-left:20px;
   }
+  #hero .hero-anim{
+    opacity:0;transform:translateY(24px);
+    transition:opacity 0.8s cubic-bezier(.2,.7,.2,1), transform 0.8s cubic-bezier(.2,.7,.2,1);
+  }
+  body.is-revealed #hero .hero-anim{opacity:1;transform:translateY(0);}
+  body.is-revealed #hero .kicker{transition-delay:0.05s;}
+  body.is-revealed #hero h1{transition-delay:0.15s;}
+  body.is-revealed #hero .sub{transition-delay:0.35s;}
+  body.is-revealed #hero .eye-big{transition-delay:0.5s;}
+  @media (prefers-reduced-motion: reduce){
+    #hero .hero-anim{opacity:1;transform:none;transition:none;}
+  }
   #hero .eye-big{
     position:absolute;
     right:6%;
     bottom:8%;
     width:min(30vw,340px);
-    opacity:0.9;
+  }
+  body.is-revealed #hero .eye-big{opacity:0.9;}
+  #hero .eye-big svg .lid{transform-origin:100px 55px;animation:blink 5.5s ease-in-out infinite;}
+  @keyframes blink{
+    0%,92%,100%{transform:scaleY(1);}
+    95%{transform:scaleY(0.08);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #hero .eye-big svg .lid{animation:none;}
   }
   @media (max-width:800px){
     #hero .eye-big{position:static;width:60vw;margin-top:48px;}
@@ -107,9 +232,11 @@
   #bio .grid{display:grid;grid-template-columns:1fr 1.4fr;gap:64px;align-items:start;}
   #bio h2{color:var(--paper);font-size:clamp(32px,4vw,48px);margin-bottom:24px;}
   #bio .facts{list-style:none;margin:0;padding:0;font-family:'Archivo Expanded',sans-serif;font-size:13px;letter-spacing:0.04em;}
-  #bio .facts li{padding:12px 0;border-top:1px solid rgba(237,233,225,0.25);display:flex;justify-content:space-between;gap:16px;}
+  #bio .facts li{padding:12px 0;border-top:1px solid rgba(237,233,225,0.25);display:flex;justify-content:space-between;gap:16px;transition:padding-left 0.25s ease;}
+  #bio .facts li:hover{padding-left:8px;color:var(--ochre);}
   #bio .facts li:last-child{border-bottom:1px solid rgba(237,233,225,0.25);}
   #bio .facts span:first-child{color:var(--concrete);text-transform:uppercase;}
+  #bio .facts li:hover span:first-child{color:var(--ochre);}
   #bio p{font-size:19px;max-width:640px;}
   #bio p + p{margin-top:20px;}
   @media (max-width:850px){#bio .grid{grid-template-columns:1fr;}}
@@ -131,6 +258,11 @@
     justify-content:flex-end;
     min-height:260px;
     padding:20px;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .wall:hover{
+    transform:translate(-4px,-4px);
+    box-shadow:8px 8px 0 0 var(--ink);
   }
   .wall.ph{
     background:repeating-linear-gradient(135deg, var(--concrete), var(--concrete) 14px, #b8b3a7 14px, #b8b3a7 16px);
@@ -141,7 +273,9 @@
     font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
     background:var(--paper);border:2px solid var(--ink);
     padding:3px 8px;
+    transition:background 0.25s ease, color 0.25s ease;
   }
+  .wall:hover .tag{background:var(--ochre);color:var(--paper);border-color:var(--ochre);}
   .wall h3{font-size:20px;background:var(--paper);display:inline-block;padding:6px 10px;border:2px solid var(--ink);}
   .wall .meta{font-family:'Archivo Expanded',sans-serif;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink);margin-top:8px;background:var(--paper);display:inline-block;padding:4px 8px;border:2px solid var(--ink);}
   .w1{grid-column:span 7;min-height:420px;}
@@ -154,6 +288,10 @@
   @media (max-width:900px){
     .wall-grid{grid-template-columns:1fr;}
     .w1,.w2,.w3,.w4,.w5,.w6,.w7{grid-column:span 1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .wall{transition:none;}
+    .wall:hover{transform:none;box-shadow:none;}
   }
 
   /* GALERIE */
@@ -170,16 +308,23 @@
     border:3px solid var(--ink);
     background:var(--ink);
     position:relative;
+    overflow:hidden;
   }
-  .gal-item img{width:100%;display:block;}
+  .gal-item img{width:100%;display:block;transition:transform 0.4s ease;}
+  .gal-item:hover img{transform:scale(1.07);}
   .gal-cap{
     font-family:'Archivo Expanded',sans-serif;
     font-size:11px;letter-spacing:0.04em;
     color:var(--paper);
     padding:10px 12px;
+    position:relative;
   }
   @media (max-width:640px){
     .gal-grid{columns:1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .gal-item img{transition:none;}
+    .gal-item:hover img{transform:none;}
   }
 
   /* DEMARCHE */
@@ -198,7 +343,10 @@
     font-weight:800;
     text-transform:uppercase;
     max-width:900px;
+    clip-path:inset(0 100% 0 0);
+    transition:clip-path 1s cubic-bezier(.2,.7,.2,1);
   }
+  #demarche blockquote.is-visible{clip-path:inset(0 0 0 0);}
   #demarche cite{
     display:block;
     margin-top:28px;
@@ -206,6 +354,9 @@
     font-family:'Source Serif 4',serif;
     font-size:16px;
     letter-spacing:0.02em;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #demarche blockquote{clip-path:none;transition:none;}
   }
 
   /* PRESSE */
@@ -217,13 +368,17 @@
     gap:24px;
     padding:22px 0;
     border-bottom:2px solid var(--ink);
+    transition:background 0.25s ease, padding-left 0.25s ease;
   }
+  .tl-item:hover{background:var(--ink);color:var(--paper);padding-left:12px;padding-right:12px;margin:0 -12px;}
+  .tl-item:hover .place{color:var(--concrete);}
   .tl-item .year{font-family:'Archivo Expanded',sans-serif;font-weight:800;font-size:22px;color:var(--ochre);}
   .tl-item h3{font-size:18px;text-transform:none;font-weight:600;letter-spacing:0;font-family:'Source Serif 4',serif;}
   .tl-item .place{font-family:'Archivo Expanded',sans-serif;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:#5a5a5a;margin-top:6px;}
   .tl-item .src{font-family:'Archivo Expanded',sans-serif;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;margin-top:8px;display:inline-block;color:var(--ochre);text-decoration:none;border-bottom:1px solid var(--ochre);}
-  .tl-item .src:hover{color:var(--ink);border-color:var(--ink);}
+  .tl-item .src:hover{color:var(--paper);border-color:var(--paper);}
   @media (max-width:600px){.tl-item{grid-template-columns:1fr;}}
+  @media (prefers-reduced-motion: reduce){.tl-item{transition:none;}}
 
   /* CONTACT */
   #contact{
@@ -234,14 +389,24 @@
   }
   #contact h2{color:var(--paper);font-size:clamp(36px,6vw,72px);margin-bottom:32px;}
   #contact .row{display:flex;flex-wrap:wrap;gap:40px;align-items:baseline;font-family:'Archivo Expanded',sans-serif;}
-  #contact a{color:var(--paper);text-decoration:none;font-size:clamp(20px,2.6vw,30px);border-bottom:3px solid var(--ochre);padding-bottom:4px;}
+  #contact a{color:var(--paper);text-decoration:none;font-size:clamp(20px,2.6vw,30px);border-bottom:3px solid var(--ochre);padding-bottom:4px;transition:color 0.2s,border-color 0.2s;}
   #contact a:hover{color:var(--ochre);border-color:var(--paper);}
   #contact .foot{margin-top:80px;font-family:'Archivo Expanded',sans-serif;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:var(--concrete);}
-
-  ::selection{background:var(--ochre);color:var(--paper);}
 </style>
 </head>
 <body>
+
+<div id="intro" aria-hidden="true">
+  <button class="skip" id="introSkip" type="button">Passer l'intro</button>
+  <div id="intro-eye">
+    <svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 55 C 40 5, 160 5, 198 55 C 160 105, 40 105, 2 55 Z" fill="none" stroke="#ede9e1" stroke-width="4"/>
+      <circle cx="100" cy="55" r="30" fill="none" stroke="#ede9e1" stroke-width="4"/>
+      <circle cx="100" cy="55" r="10" fill="#b23a2e"/>
+    </svg>
+  </div>
+  <div class="hint">Faites défiler pour entrer<span class="arrow"></span></div>
+</div>
 
 <nav>
   <div class="logo">Ahlam Jarban</div>
@@ -257,74 +422,95 @@
 
 <section id="hero">
   <div class="wrap">
-    <div class="kicker">Artiste plasticienne — WryaEyes</div>
-    <h1>Le regard<span class="line2">reste libre.</span></h1>
-    <p class="sub">Ahlam Jarban, dite WryaEyes. Première graffeuse du Yémen, aujourd'hui artiste en exil à Paris. Pochoir, peinture, textile, sculpture, art numérique — un seul motif au centre : les yeux.</p>
+    <div class="kicker hero-anim">Artiste plasticienne — WryaEyes</div>
+    <h1 class="hero-anim">Le regard<span class="line2">reste libre.</span></h1>
+    <p class="sub hero-anim">Ahlam Jarban, dite WryaEyes. Première graffeuse du Yémen, aujourd'hui artiste en exil à Paris. Pochoir, peinture, textile, sculpture, art numérique — un seul motif au centre : les yeux.</p>
   </div>
-  <div class="eye-big">
+  <div class="eye-big hero-anim">
     <svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2 55 C 40 5, 160 5, 198 55 C 160 105, 40 105, 2 55 Z" fill="none" stroke="#121212" stroke-width="4"/>
-      <circle cx="100" cy="55" r="30" fill="none" stroke="#121212" stroke-width="4"/>
-      <circle cx="100" cy="55" r="10" fill="#b23a2e"/>
+      <g class="lid">
+        <path d="M2 55 C 40 5, 160 5, 198 55 C 160 105, 40 105, 2 55 Z" fill="none" stroke="#121212" stroke-width="4"/>
+        <circle cx="100" cy="55" r="30" fill="none" stroke="#121212" stroke-width="4"/>
+        <circle cx="100" cy="55" r="10" fill="#b23a2e"/>
+      </g>
     </svg>
   </div>
 </section>
 
+<div class="marquee">
+  <div class="marquee__track">
+    <span>WryaEyes <span class="dot">·</span></span>
+    <span>Le regard reste libre <span class="dot">·</span></span>
+    <span>Pochoir <span class="dot">·</span></span>
+    <span>Peinture <span class="dot">·</span></span>
+    <span>Textile <span class="dot">·</span></span>
+    <span>Sculpture <span class="dot">·</span></span>
+    <span>Art numérique <span class="dot">·</span></span>
+    <span>WryaEyes <span class="dot">·</span></span>
+    <span>Le regard reste libre <span class="dot">·</span></span>
+    <span>Pochoir <span class="dot">·</span></span>
+    <span>Peinture <span class="dot">·</span></span>
+    <span>Textile <span class="dot">·</span></span>
+    <span>Sculpture <span class="dot">·</span></span>
+    <span>Art numérique <span class="dot">·</span></span>
+  </div>
+</div>
+
 <section id="bio">
   <div class="wrap grid">
-    <ul class="facts">
-      <li><span>Née</span><span>08.09.1992 — Sanaa, Yémen</span></li>
-      <li><span>Origines</span><span>Somalienne &amp; éthiopienne</span></li>
-      <li><span>Formation initiale</span><span>Géologie pétrolière, Univ. de Sanaa</span></li>
-      <li><span>Graffiti</span><span>Depuis 2010, première femme graffeuse du Yémen</span></li>
-      <li><span>Exil</span><span>Yémen → Jordanie → France (2018)</span></li>
-      <li><span>Actuellement</span><span>Atelier des Artistes en Exil, Paris · ENSBA depuis 2019</span></li>
+    <ul class="facts reveal-group">
+      <li class="reveal" style="--i:0"><span>Née</span><span>08.09.1992 — Sanaa, Yémen</span></li>
+      <li class="reveal" style="--i:1"><span>Origines</span><span>Somalienne &amp; éthiopienne</span></li>
+      <li class="reveal" style="--i:2"><span>Formation initiale</span><span>Géologie pétrolière, Univ. de Sanaa</span></li>
+      <li class="reveal" style="--i:3"><span>Graffiti</span><span>Depuis 2010, première femme graffeuse du Yémen</span></li>
+      <li class="reveal" style="--i:4"><span>Exil</span><span>Yémen → Jordanie → France (2018)</span></li>
+      <li class="reveal" style="--i:5"><span>Actuellement</span><span>Atelier des Artistes en Exil, Paris · ENSBA depuis 2019</span></li>
     </ul>
     <div>
-      <h2>Le corps efface,<br>le regard résiste.</h2>
-      <p>Ahlam Jarban commence le graffiti à Sanaa en 2010, en pleine clandestinité — première femme à peindre dans la rue au Yémen, en crew, alors que le pays bascule dans la guerre en 2015. Diplômée en géologie pétrolière, elle abandonne cette voie pour l'art, seul espace où elle peut encore dire quelque chose.</p>
-      <p>Elle fuit le pays en 2016 avec sa mère et sa grand-mère, transite par la Jordanie, puis arrive seule en France en 2018. Depuis, elle est membre de l'Atelier des Artistes en Exil à Paris et étudie à l'ENSBA.</p>
-      <p>Son travail — pochoir, peinture, textile, sculpture, art numérique — revient sans cesse aux yeux : le seul espace du corps féminin resté visible sous le niqab, un motif qu'elle a retrouvé dans le masque sanitaire porté en Europe. Un discours féministe, qui critique autant les sociétés islamiques extrémistes et les régimes autoritaires que le racisme, y compris à l'intérieur de sa propre communauté.</p>
+      <h2 class="reveal">Le corps efface,<br>le regard résiste.</h2>
+      <p class="reveal" style="--i:1">Ahlam Jarban commence le graffiti à Sanaa en 2010, en pleine clandestinité — première femme à peindre dans la rue au Yémen, en crew, alors que le pays bascule dans la guerre en 2015. Diplômée en géologie pétrolière, elle abandonne cette voie pour l'art, seul espace où elle peut encore dire quelque chose.</p>
+      <p class="reveal" style="--i:2">Elle fuit le pays en 2016 avec sa mère et sa grand-mère, transite par la Jordanie, puis arrive seule en France en 2018. Depuis, elle est membre de l'Atelier des Artistes en Exil à Paris et étudie à l'ENSBA.</p>
+      <p class="reveal" style="--i:3">Son travail — pochoir, peinture, textile, sculpture, art numérique — revient sans cesse aux yeux : le seul espace du corps féminin resté visible sous le niqab, un motif qu'elle a retrouvé dans le masque sanitaire porté en Europe. Un discours féministe, qui critique autant les sociétés islamiques extrémistes et les régimes autoritaires que le racisme, y compris à l'intérieur de sa propre communauté.</p>
     </div>
   </div>
 </section>
 
 <section id="travaux">
   <div class="wrap">
-    <h2>Travaux sélectionnés</h2>
-    <p class="lead">Une sélection de séries et pièces, du pochoir dans la rue aux installations en galerie. Chaque mur, une œuvre.</p>
-    <div class="wall-grid">
-      <div class="wall ph w1">
+    <h2 class="reveal">Travaux sélectionnés</h2>
+    <p class="lead reveal" style="--i:1">Une sélection de séries et pièces, du pochoir dans la rue aux installations en galerie. Chaque mur, une œuvre.</p>
+    <div class="wall-grid reveal-group">
+      <div class="wall ph w1 reveal" style="--i:0">
         <span class="tag">Série</span>
         <h3>Haram Eyes</h3>
         <span class="meta">2020 — Pavillon Carré de Baudouin, avec Art Azoï</span>
       </div>
-      <div class="wall ph w2">
+      <div class="wall ph w2 reveal" style="--i:1">
         <span class="tag">Exposition collective</span>
         <h3>Visions d'exil</h3>
         <span class="meta">2019 – 2020</span>
       </div>
-      <div class="wall ph w3">
+      <div class="wall ph w3 reveal" style="--i:2">
         <span class="tag">Série</span>
         <h3>Remasks</h3>
         <span class="meta">2022 — Mairie de Paris Centre</span>
       </div>
-      <div class="wall ph w4">
+      <div class="wall ph w4 reveal" style="--i:3">
         <span class="tag">Collaboration</span>
         <h3>Fresque UNHCR</h3>
         <span class="meta">2021 — Mairie de Bayeux</span>
       </div>
-      <div class="wall ph w5">
+      <div class="wall ph w5 reveal" style="--i:4">
         <span class="tag">Exposition collective</span>
         <h3>Regards sur la Mixité</h3>
         <span class="meta">2022 — Val-de-Reuil</span>
       </div>
-      <div class="wall ph w6">
+      <div class="wall ph w6 reveal" style="--i:5">
         <span class="tag">Collection</span>
         <h3>Gaza</h3>
         <span class="meta">Imago Mundi Collection</span>
       </div>
-      <div class="wall ph w7">
+      <div class="wall ph w7 reveal" style="--i:6">
         <span class="tag">Exposition personnelle</span>
         <h3>Je passe (l'intégrale)</h3>
         <span class="meta">2022 — Équinoxe, Châteauroux</span>
@@ -335,26 +521,26 @@
 
 <section id="galerie">
   <div class="wrap">
-    <h2>Galerie</h2>
-    <p class="lead">Photos de terrain et d'atelier.</p>
-    <div class="gal-grid">
-      <div class="gal-item">
+    <h2 class="reveal">Galerie</h2>
+    <p class="lead reveal" style="--i:1">Photos de terrain et d'atelier.</p>
+    <div class="gal-grid reveal-group">
+      <div class="gal-item reveal" style="--i:0">
         <img src="images/galerie-01-mur-rue.jpg" alt="Mur peint dans une rue de Paris, motif répété et yeux peints, avec la mention Covid-19">
         <div class="gal-cap">Intervention murale — Paris</div>
       </div>
-      <div class="gal-item">
+      <div class="gal-item reveal" style="--i:1">
         <img src="images/galerie-02-en-cours.jpg" alt="Ahlam Jarban peignant sur une échelle, en train de réaliser des yeux sur le mur">
         <div class="gal-cap">En cours de réalisation</div>
       </div>
-      <div class="gal-item">
+      <div class="gal-item reveal" style="--i:2">
         <img src="images/galerie-06-gaza.jpg" alt="Graffiti du mot GAZA en bleu, Ahlam Jarban posant devant avec des bombes de peinture">
         <div class="gal-cap">Gaza — graffiti</div>
       </div>
-      <div class="gal-item">
+      <div class="gal-item reveal" style="--i:3">
         <img src="images/galerie-08-oeil-peinture.jpg" alt="Peinture d'un œil rose et vert sur fond de calligraphie">
         <div class="gal-cap">Peinture — œil</div>
       </div>
-      <div class="gal-item">
+      <div class="gal-item reveal" style="--i:4">
         <img src="images/galerie-14-sculpture-acier.jpg" alt="Sculpture en acier en forme d'œil, en cours de fabrication dans un atelier">
         <div class="gal-cap">Sculpture en acier — atelier</div>
       </div>
@@ -364,7 +550,7 @@
 
 <section id="demarche">
   <div class="wrap">
-    <blockquote>
+    <blockquote class="reveal-quote">
       « Les yeux sont le seul endroit du corps qu'on ne pouvait pas nous enlever.
       Je peins ce qui reste. »
       <cite>— Ahlam Jarban, WryaEyes</cite>
@@ -374,16 +560,16 @@
 
 <section id="presse">
   <div class="wrap">
-    <h2>Presse &amp; expositions</h2>
-    <div class="timeline">
-      <div class="tl-item">
+    <h2 class="reveal">Presse &amp; expositions</h2>
+    <div class="timeline reveal-group">
+      <div class="tl-item reveal" style="--i:0">
         <div class="year">2022</div>
         <div>
           <h3>Je passe (l'intégrale) — exposition personnelle</h3>
           <div class="place">Équinoxe, Châteauroux</div>
         </div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal" style="--i:1">
         <div class="year">2022</div>
         <div>
           <h3>Regards sur la Mixité — exposition collective</h3>
@@ -391,7 +577,7 @@
           <a class="src" href="https://www.valdereuil.fr/actualites/une-fresque-aux-regards-sur-la-mixite" target="_blank" rel="noopener">Voir l'article — Ville de Val-de-Reuil</a>
         </div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal" style="--i:2">
         <div class="year">2022</div>
         <div>
           <h3>Remasks — exposition collective</h3>
@@ -399,7 +585,7 @@
           <a class="src" href="https://aa-e.org/en/exposition-remasks-2/" target="_blank" rel="noopener">Voir l'exposition — Atelier des Artistes en Exil</a>
         </div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal" style="--i:3">
         <div class="year">2021</div>
         <div>
           <h3>Fresque collaborative UNHCR</h3>
@@ -407,7 +593,7 @@
           <a class="src" href="https://www.unhcr.org/fr-fr/news/stories/2021/11/6166e7df4/interact-2021-des-collegiens-et-lyceens-normands-a-la-rencontre-des-refugies.html" target="_blank" rel="noopener">Voir l'article — HCR France</a>
         </div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal" style="--i:4">
         <div class="year">2020</div>
         <div>
           <h3>Haram Eyes, avec Art Azoï</h3>
@@ -415,7 +601,7 @@
           <a class="src" href="https://www.brooklynstreetart.com/2021/02/10/ahlam-jarban-is-not-forbidden-in-paris-at-pavillon-carre-de-baudouin/" target="_blank" rel="noopener">Voir l'article — Brooklyn Street Art</a>
         </div>
       </div>
-      <div class="tl-item">
+      <div class="tl-item reveal" style="--i:5">
         <div class="year">2019 – 2020</div>
         <div>
           <h3>Visions d'exil — exposition collective</h3>
@@ -429,14 +615,115 @@
 
 <section id="contact">
   <div class="wrap">
-    <h2>Parlons-en.</h2>
-    <div class="row">
-      <a href="mailto:ahlam.jarban@gmail.com">ahlam.jarban@gmail.com</a>
-      <a href="https://instagram.com/wryaeyes" target="_blank" rel="noopener">@wryaeyes</a>
+    <h2 class="reveal">Parlons-en.</h2>
+    <div class="row reveal-group">
+      <a class="reveal" style="--i:0" href="mailto:ahlam.jarban@gmail.com">ahlam.jarban@gmail.com</a>
+      <a class="reveal" style="--i:1" href="https://instagram.com/wryaeyes" target="_blank" rel="noopener">@wryaeyes</a>
     </div>
-    <div class="foot">Ahlam Jarban — WryaEyes · Atelier des Artistes en Exil, Paris</div>
+    <div class="foot reveal" style="--i:2">Ahlam Jarban — WryaEyes · Atelier des Artistes en Exil, Paris</div>
   </div>
 </section>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var intro = document.getElementById('intro');
+  var introEye = document.getElementById('intro-eye');
+  var skipBtn = document.getElementById('introSkip');
+  var introDone = false;
+
+  function finishIntro(){
+    if (introDone) return;
+    introDone = true;
+    intro.classList.add('is-done');
+    document.body.classList.add('is-revealed');
+    setTimeout(function(){ document.body.classList.add('intro-off'); }, 450);
+  }
+
+  if (reduceMotion) {
+    finishIntro();
+  } else {
+    var denom = Math.max(window.innerHeight * 0.6, 320);
+    var ticking = false;
+
+    function updateIntro(){
+      ticking = false;
+      if (introDone) return;
+      var p = Math.min(window.scrollY / denom, 1);
+      var scale = 1 + p * 22;
+      introEye.style.transform = 'scale(' + scale + ')';
+      var fadeStart = 0.55;
+      var alpha = p < fadeStart ? 1 : Math.max(0, 1 - (p - fadeStart) / (1 - fadeStart));
+      intro.style.opacity = alpha;
+      if (window.scrollY >= denom - 4) finishIntro();
+    }
+
+    window.addEventListener('scroll', function(){
+      if (!ticking) { window.requestAnimationFrame(updateIntro); ticking = true; }
+    }, { passive: true });
+
+    skipBtn.addEventListener('click', finishIntro);
+    updateIntro();
+  }
+
+  // nav scroll state + active link
+  var navEl = document.querySelector('nav');
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('nav .links a'));
+  window.addEventListener('scroll', function(){
+    navEl.classList.toggle('is-scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  var sections = navLinks
+    .map(function(a){ return document.querySelector(a.getAttribute('href')); })
+    .filter(Boolean);
+
+  if ('IntersectionObserver' in window) {
+    var navObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = navLinks.filter(function(a){ return a.getAttribute('href') === '#' + entry.target.id; })[0];
+        if (!link) return;
+        if (entry.isIntersecting) {
+          navLinks.forEach(function(a){ a.classList.remove('is-active'); });
+          link.classList.add('is-active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    sections.forEach(function(s){ navObserver.observe(s); });
+
+    // generic reveal
+    var revealObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+
+    // demarche quote wipe — observe the unclipped wrapper, not the
+    // clipped element itself (a self clip-path can pin its own
+    // intersection ratio at 0 forever)
+    var quote = document.querySelector('.reveal-quote');
+    if (quote) {
+      var quoteTrigger = quote.closest('.wrap') || quote.parentElement;
+      var quoteObserver = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) {
+            quote.classList.add('is-visible');
+            quoteObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      quoteObserver.observe(quoteTrigger);
+    }
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('is-visible'); });
+    var q = document.querySelector('.reveal-quote');
+    if (q) q.classList.add('is-visible');
+  }
+})();
+</script>
 
 </body>
 </html>
