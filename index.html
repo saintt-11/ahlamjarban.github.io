@@ -312,13 +312,6 @@
   }
   .gal-item img{width:100%;display:block;transition:transform 0.4s ease;}
   .gal-item:hover img{transform:scale(1.07);}
-  .gal-cap{
-    font-family:'Archivo Expanded',sans-serif;
-    font-size:11px;letter-spacing:0.04em;
-    color:var(--paper);
-    padding:10px 12px;
-    position:relative;
-  }
   @media (max-width:640px){
     .gal-grid{columns:1;}
   }
@@ -526,23 +519,45 @@
     <div class="gal-grid reveal-group">
       <div class="gal-item reveal" style="--i:0">
         <img src="images/galerie-01-mur-rue.jpg" alt="Mur peint dans une rue de Paris, motif répété et yeux peints, avec la mention Covid-19">
-        <div class="gal-cap">Intervention murale — Paris</div>
       </div>
       <div class="gal-item reveal" style="--i:1">
         <img src="images/galerie-02-en-cours.jpg" alt="Ahlam Jarban peignant sur une échelle, en train de réaliser des yeux sur le mur">
-        <div class="gal-cap">En cours de réalisation</div>
       </div>
       <div class="gal-item reveal" style="--i:2">
-        <img src="images/galerie-06-gaza.jpg" alt="Graffiti du mot GAZA en bleu, Ahlam Jarban posant devant avec des bombes de peinture">
-        <div class="gal-cap">Gaza — graffiti</div>
+        <img src="images/galerie-03-detail-yeux.jpg" alt="Détail peint de deux yeux sur fond de calligraphie et texte Covid-19">
       </div>
       <div class="gal-item reveal" style="--i:3">
-        <img src="images/galerie-08-oeil-peinture.jpg" alt="Peinture d'un œil rose et vert sur fond de calligraphie">
-        <div class="gal-cap">Peinture — œil</div>
+        <img src="images/galerie-04-detail-oeil.jpg" alt="Détail peint d'un œil aux tons roses et violets">
       </div>
       <div class="gal-item reveal" style="--i:4">
+        <img src="images/galerie-05-mur-couleur.jpg" alt="Mur peint en dégradé de couleurs avec des yeux, une passante portant un masque sanitaire">
+      </div>
+      <div class="gal-item reveal" style="--i:5">
+        <img src="images/galerie-06-gaza.jpg" alt="Graffiti du mot GAZA en bleu, Ahlam Jarban posant devant avec des bombes de peinture">
+      </div>
+      <div class="gal-item reveal" style="--i:6">
+        <img src="images/galerie-07-niche.jpg" alt="Œil peint dans une niche murale, graffiti coloré bleu et vert">
+      </div>
+      <div class="gal-item reveal" style="--i:7">
+        <img src="images/galerie-08-oeil-peinture.jpg" alt="Peinture d'un œil rose et vert sur fond de calligraphie">
+      </div>
+      <div class="gal-item reveal" style="--i:8">
+        <img src="images/galerie-09-collage-haram.jpg" alt="Collage numérique vert, deux silhouettes, motif du mot haram répété en arrière-plan">
+      </div>
+      <div class="gal-item reveal" style="--i:9">
+        <img src="images/galerie-10-collage-textile.jpg" alt="Collage rouge, motif d'yeux cousus et de bouches répété en quatre quadrants">
+      </div>
+      <div class="gal-item reveal" style="--i:10">
+        <img src="images/galerie-11-numerique.jpg" alt="Composition numérique abstraite en vert et bleu">
+      </div>
+      <div class="gal-item reveal" style="--i:11">
+        <img src="images/galerie-12-sculpture-cuivre.jpg" alt="Sculpture métallique en forme d'œil, cuivre et laiton, tenue en main dans un atelier">
+      </div>
+      <div class="gal-item reveal" style="--i:12">
+        <img src="images/galerie-13-sculpture-metal.jpg" alt="Sculpture métallique en forme d'œil, tons rouges et argentés">
+      </div>
+      <div class="gal-item reveal" style="--i:13">
         <img src="images/galerie-14-sculpture-acier.jpg" alt="Sculpture en acier en forme d'œil, en cours de fabrication dans un atelier">
-        <div class="gal-cap">Sculpture en acier — atelier</div>
       </div>
     </div>
   </div>
@@ -632,38 +647,100 @@
   var skipBtn = document.getElementById('introSkip');
   var introDone = false;
 
+  function lockScroll(){
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '0';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+  }
+
+  function unlockScroll(){
+    document.documentElement.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+  }
+
+  var finishing = false;
+
   function finishIntro(){
-    if (introDone) return;
-    introDone = true;
+    if (introDone || finishing) return;
+    finishing = true;
     intro.classList.add('is-done');
     document.body.classList.add('is-revealed');
-    setTimeout(function(){ document.body.classList.add('intro-off'); }, 450);
+    // keep swallowing wheel/touch input a little longer so the rest of
+    // an in-progress gesture can't "spill over" into a real page scroll
+    // once we hand control back — the page must land exactly at the top.
+    setTimeout(function(){
+      introDone = true;
+      unlockScroll();
+      window.scrollTo(0, 0);
+      document.body.classList.add('intro-off');
+    }, 350);
   }
 
   if (reduceMotion) {
     finishIntro();
   } else {
-    var denom = Math.max(window.innerHeight * 0.6, 320);
-    var ticking = false;
+    window.scrollTo(0, 0);
+    lockScroll();
 
-    function updateIntro(){
-      ticking = false;
-      if (introDone) return;
-      var p = Math.min(window.scrollY / denom, 1);
+    // gesture-driven: the intro never lets the real page scroll —
+    // wheel/touch/key input only advances a virtual progress value,
+    // so once it finishes the page is exactly where it started (top).
+    var denom = Math.min(Math.max(window.innerHeight * 1.0, 500), 1400);
+    var progress = 0;
+    var applyScheduled = false;
+
+    function applyProgress(){
+      applyScheduled = false;
+      var p = Math.min(Math.max(progress / denom, 0), 1);
       var scale = 1 + p * 22;
       introEye.style.transform = 'scale(' + scale + ')';
       var fadeStart = 0.55;
       var alpha = p < fadeStart ? 1 : Math.max(0, 1 - (p - fadeStart) / (1 - fadeStart));
       intro.style.opacity = alpha;
-      if (window.scrollY >= denom - 4) finishIntro();
+      if (p >= 1) finishIntro();
     }
 
-    window.addEventListener('scroll', function(){
-      if (!ticking) { window.requestAnimationFrame(updateIntro); ticking = true; }
+    function addProgress(delta){
+      if (finishing || introDone || delta <= 0) return;
+      progress += delta;
+      if (!applyScheduled) { applyScheduled = true; window.requestAnimationFrame(applyProgress); }
+    }
+
+    window.addEventListener('wheel', function(e){
+      if (introDone) return;
+      e.preventDefault();
+      addProgress(e.deltaY);
+    }, { passive: false });
+
+    var touchY = null;
+    window.addEventListener('touchstart', function(e){
+      if (introDone) return;
+      touchY = e.touches[0].clientY;
     }, { passive: true });
+    window.addEventListener('touchmove', function(e){
+      if (introDone) return;
+      e.preventDefault();
+      var y = e.touches[0].clientY;
+      addProgress(touchY - y);
+      touchY = y;
+    }, { passive: false });
+
+    window.addEventListener('keydown', function(e){
+      if (introDone || finishing) return;
+      if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        addProgress(denom * 0.3);
+      } else if (e.key === 'Escape') {
+        finishIntro();
+      }
+    });
 
     skipBtn.addEventListener('click', finishIntro);
-    updateIntro();
   }
 
   // nav scroll state + active link
